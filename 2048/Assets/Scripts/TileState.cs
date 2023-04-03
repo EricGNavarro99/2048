@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UnityTileState
+namespace Unity.Tile.State
 {
     [CreateAssetMenu(menuName = "Tile state")]
     public class TileState : ScriptableObject

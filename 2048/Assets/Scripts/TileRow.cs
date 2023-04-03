@@ -1,7 +1,7 @@
 using UnityEngine;
-using UnityTileCell;
+using Unity.Tile.Cell;
 
-namespace UnityTileRow
+namespace Unity.Tile.Row
 {
     public class TileRow : MonoBehaviour
     {

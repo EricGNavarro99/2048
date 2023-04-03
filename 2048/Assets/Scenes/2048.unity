@@ -1382,6 +1382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1180451297}
   - component: {fileID: 1180451298}
+  - component: {fileID: 1180451299}
   m_Layer: 5
   m_Name: Board
   m_TagString: Untagged
@@ -1424,7 +1425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: -2364769092810907754, guid: 9c02c2e9b092fd2428adeae4c34551e6, type: 3}
-  tilesInBoard: 2
+  tilesInBoard: 4
   tileStates:
   - {fileID: 11400000, guid: 5a871363a6350c444b5b6a4678e47398, type: 2}
   - {fileID: 11400000, guid: 41c3184faae3a7940b5ae56d212c02bd, type: 2}
@@ -1437,6 +1438,87 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0d122c3d47ef8e841ae8efc8942befc0, type: 2}
   - {fileID: 11400000, guid: 02b58e52f75fccb4db024cbdd8258a20, type: 2}
   - {fileID: 11400000, guid: a4b031751c40b7b41a9242059188129d, type: 2}
+--- !u!114 &1180451299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180451296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fee7c232a997f84caea300ea8bcc8a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputOption:
+  - name: Up
+    keyCode: 7700000011010000
+    events:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1180451298}
+          m_TargetAssemblyTypeName: Unity.Tile.Board.TileBoard, Assembly-CSharp
+          m_MethodName: MoveUp
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: Down
+    keyCode: 7300000012010000
+    events:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1180451298}
+          m_TargetAssemblyTypeName: Unity.Tile.Board.TileBoard, Assembly-CSharp
+          m_MethodName: MoveDown
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: Left
+    keyCode: 6100000014010000
+    events:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1180451298}
+          m_TargetAssemblyTypeName: Unity.Tile.Board.TileBoard, Assembly-CSharp
+          m_MethodName: MoveLeft
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: Right
+    keyCode: 6400000013010000
+    events:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1180451298}
+          m_TargetAssemblyTypeName: Unity.Tile.Board.TileBoard, Assembly-CSharp
+          m_MethodName: MoveRight
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1187909564
 GameObject:
   m_ObjectHideFlags: 0

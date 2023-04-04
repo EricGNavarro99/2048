@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -48,7 +50,24 @@ namespace Unity.Tile
             this.cell = cell;
             this.cell.tile = this;
 
-            transform.position = cell.transform.position;
+            Animate(cell.transform.position);
+        }
+
+        private async void Animate(Vector3 to)
+        {
+            float elapsed = 0f;
+            float duration = 0.1f;
+
+            Vector3 from = transform.position;
+
+            while (elapsed < duration)
+            {
+                transform.position = Vector3.Lerp(from, to, elapsed / duration);
+                elapsed += Time.deltaTime;
+                await Task.Delay(TimeSpan.FromMilliseconds(1));
+            }
+
+            transform.position = to;
         }
     }
 }

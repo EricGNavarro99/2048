@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
-public class InputOptions
+public class inputOptions
 {
     [Space] public string name = null;
     [Space] public KeyCode[] keyCode = new KeyCode[0];
@@ -13,11 +13,11 @@ namespace Unity.InputSystem
 {
     public class InputSystem : MonoBehaviour
     {
-        public InputOptions[] inputOption;
+        public inputOptions[] inputOptions;
 
         private void Awake()
         {
-            if (IncompletedFields(inputOption))
+            if (IncompletedFields(inputOptions))
             {
                 UnityEditor.EditorApplication.isPlaying = false;
                 throw new System.Exception("Some fields are incompleted");
@@ -30,11 +30,10 @@ namespace Unity.InputSystem
             }
         }
 
-        private void LateUpdate()
+        private void Update()
         {
-            for (int a = 0; a < inputOption.Length; a++)
-                if (DetectKeyDown(inputOption[a].keyCode))
-                    inputOption[a].events.Invoke();
+            for (int a = 0; a < inputOptions.Length; a++)
+                if (DetectKeyDown(inputOptions[a].keyCode)) inputOptions[a].events.Invoke();
         }
 
         private bool DetectKeyDown(KeyCode[] keys)
@@ -51,17 +50,17 @@ namespace Unity.InputSystem
         {
             int keyNumber = 0;
 
-            for (int a = 0; a < inputOption.Length; a++)
-                for (int b = 0; b < inputOption[a].keyCode.Length; b++)
+            for (int a = 0; a < inputOptions.Length; a++)
+                for (int b = 0; b < inputOptions[a].keyCode.Length; b++)
                     keyNumber++;
 
             KeyCode[] allKeys = new KeyCode[keyNumber];
             keyNumber = 0;
 
-            for (int a = 0; a < inputOption.Length; a++)
-                for (int b = 0; b < inputOption[a].keyCode.Length; b++)
+            for (int a = 0; a < inputOptions.Length; a++)
+                for (int b = 0; b < inputOptions[a].keyCode.Length; b++)
                 {
-                    allKeys[keyNumber] = inputOption[a].keyCode[b];
+                    allKeys[keyNumber] = inputOptions[a].keyCode[b];
                     keyNumber++;
                 }
 
@@ -88,7 +87,7 @@ namespace Unity.InputSystem
             return isRepeatedKeys;
         }
 
-        private bool IncompletedFields(InputOptions[] inputOptions)
+        private bool IncompletedFields(inputOptions[] inputOptions)
         {
             bool areIncompletedFields = false;
 

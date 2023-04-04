@@ -1425,7 +1425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: -2364769092810907754, guid: 9c02c2e9b092fd2428adeae4c34551e6, type: 3}
-  tilesInBoard: 4
+  tilesInBoard: 2
   tileStates:
   - {fileID: 11400000, guid: 5a871363a6350c444b5b6a4678e47398, type: 2}
   - {fileID: 11400000, guid: 41c3184faae3a7940b5ae56d212c02bd, type: 2}
@@ -1450,7 +1450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fee7c232a997f84caea300ea8bcc8a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputOption:
+  inputOptions:
   - name: Up
     keyCode: 7700000011010000
     events:

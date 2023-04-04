@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Tile.State;
 using Unity.Tile.Grid;
 using Unity.Tile.Cell;
-using Unity.VisualScripting;
 
 namespace Unity.Tile.Board
 {    
@@ -15,6 +16,8 @@ namespace Unity.Tile.Board
 
         private TileGrid grid;
         private List<Tile> tiles;
+
+        private bool waiting;
 
         private void Awake()
         {
@@ -37,18 +40,22 @@ namespace Unity.Tile.Board
 
         private void Move(Vector2Int direction, int startX, int incrementX, int startY, int incrementY)
         {
+            bool changed = false;
+
             for (int x = startX; x >= 0 && x < grid.width; x += incrementX)
             {
                 for (int y = startY; y >= 0 && y < grid.height; y += incrementY)
                 {
                     TileCell cell = grid.GetCell(x, y);
 
-                    if (cell.occupied) MoveTile(cell.tile, direction);
+                    if (cell.occupied) changed |= MoveTile(cell.tile, direction);
                 }
             }
+
+            if (changed) WaitingForChanges();
         }
         
-        private void MoveTile(Tile tile, Vector2Int direction)
+        private bool MoveTile(Tile tile, Vector2Int direction)
         {
             TileCell newCell = null;
             TileCell adjacent = grid.GetAdjacentCell(tile.cell, direction);
@@ -61,15 +68,50 @@ namespace Unity.Tile.Board
                 adjacent = grid.GetAdjacentCell(adjacent, direction);
             }
 
-            if (newCell != null) tile.MoveTo(newCell);
+            if (newCell != null)
+            {
+                tile.MoveTo(newCell);
+                return true;
+            }
+
+            return false;
         }
 
-        public void MoveUp() => Move(Vector2Int.up, 0, 1, 1, 1);
+        private async void WaitingForChanges()
+        {
+            waiting = true;
 
-        public void MoveDown() => Move(Vector2Int.down, 0, 1, grid.height - 2, -1);
+            await Task.Delay(TimeSpan.FromSeconds(0.1));
 
-        public void MoveLeft() => Move(Vector2Int.left, 1, 1, 0, 1); // NO FUNCIONA
+            waiting = false;
+        }
 
-        public void MoveRight() => Move(Vector2Int.right, grid.width - 2, -1, 0, 1); // NO FUNCIONA
+        public void MoveUp()
+        {
+            if (waiting) return;
+
+            Move(Vector2Int.up, 0, 1, 1, 1);
+        }
+
+        public void MoveDown()
+        {
+            if (waiting) return;
+
+            Move(Vector2Int.down, 0, 1, grid.height - 2, -1);
+        }
+
+        public void MoveLeft()
+        {
+            if (waiting) return;
+
+            Move(Vector2Int.left, 1, 1, 0, 1);
+        }
+
+        public void MoveRight()
+        {
+            if (waiting) return;
+
+            Move(Vector2Int.right, grid.width - 2, -1, 0, 1);
+        }
     }
 }

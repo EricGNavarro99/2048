@@ -14,6 +14,8 @@ namespace Unity.Tile
         public TileCell cell { get; private set; }
         public int number { get; private set; }
 
+        public bool locked { get; set; }
+
         private Image background;
         private TextMeshProUGUI text;
 
@@ -50,10 +52,21 @@ namespace Unity.Tile
             this.cell = cell;
             this.cell.tile = this;
 
-            Animate(cell.transform.position);
+            Animate(cell.transform.position, false);
         }
 
-        private async void Animate(Vector3 to)
+        public void Merge(TileCell cell)
+        {
+            if (this.cell != null ) this.cell.tile = null;
+
+            this.cell = null;
+
+            cell.tile.locked = true;
+
+            Animate(cell.transform.position, true);
+        }
+
+        private async void Animate(Vector3 to, bool merging)
         {
             float elapsed = 0f;
             float duration = 0.1f;
@@ -68,6 +81,8 @@ namespace Unity.Tile
             }
 
             transform.position = to;
+
+            if (merging) Destroy(gameObject);
         }
     }
 }

@@ -62,7 +62,16 @@ namespace Unity.Tile.Board
 
             while (adjacent != null) 
             {
-                if (adjacent.occupied) break;
+                if (adjacent.occupied)
+                {
+                    if (CanMerge(tile, adjacent.tile))
+                    {
+                        Merge(tile, adjacent.tile);
+                        return true;
+                    }
+
+                    break;
+                }
 
                 newCell = adjacent;
                 adjacent = grid.GetAdjacentCell(adjacent, direction);
@@ -77,6 +86,28 @@ namespace Unity.Tile.Board
             return false;
         }
 
+        private bool CanMerge(Tile tileA, Tile tileB) => tileA.number == tileB.number && !tileB.locked;
+
+        private void Merge(Tile tileA, Tile tileB)
+        {
+            tiles.Remove(tileA);
+
+            tileA.Merge(tileB.cell);
+
+            int index = Mathf.Clamp(IndexOf(tileB.state) + 1, 0, tileStates.Length - 1);
+            int number = tileB.number * 2;
+
+            tileB.SetState(tileStates[index], number);
+        }
+
+        private int IndexOf(TileState state)
+        {
+            for (int a = 0; a < tileStates.Length; a++)
+                if (state == tileStates[a]) return a;
+
+            return -1;
+        }
+
         private async void WaitingForChanges()
         {
             waiting = true;
@@ -84,6 +115,10 @@ namespace Unity.Tile.Board
             await Task.Delay(TimeSpan.FromSeconds(0.1));
 
             waiting = false;
+
+            foreach (var tile in tiles) tile.locked = false;
+
+            if (tiles.Count != grid.size) CreateTile();
         }
 
         public void MoveUp()

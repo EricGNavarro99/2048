@@ -17,7 +17,7 @@ namespace Unity.InputSystem
 
         private void Awake()
         {
-            if (IncompletedFields(inputOptions))
+            if (IncompletedFields(this.inputOptions))
             {
                 UnityEditor.EditorApplication.isPlaying = false;
                 throw new System.Exception("Some fields are incompleted");
@@ -32,8 +32,8 @@ namespace Unity.InputSystem
 
         private void Update()
         {
-            for (int a = 0; a < inputOptions.Length; a++)
-                if (DetectKeyDown(inputOptions[a].keyCode)) inputOptions[a].events.Invoke();
+            for (int a = 0; a < this.inputOptions.Length; a++)
+                if (DetectKeyDown(this.inputOptions[a].keyCode)) this.inputOptions[a].events.Invoke();
         }
 
         private bool DetectKeyDown(KeyCode[] keys)
@@ -50,17 +50,17 @@ namespace Unity.InputSystem
         {
             int keyNumber = 0;
 
-            for (int a = 0; a < inputOptions.Length; a++)
-                for (int b = 0; b < inputOptions[a].keyCode.Length; b++)
+            for (int a = 0; a < this.inputOptions.Length; a++)
+                for (int b = 0; b < this.inputOptions[a].keyCode.Length; b++)
                     keyNumber++;
 
             KeyCode[] allKeys = new KeyCode[keyNumber];
             keyNumber = 0;
 
-            for (int a = 0; a < inputOptions.Length; a++)
-                for (int b = 0; b < inputOptions[a].keyCode.Length; b++)
+            for (int a = 0; a < this.inputOptions.Length; a++)
+                for (int b = 0; b < this.inputOptions[a].keyCode.Length; b++)
                 {
-                    allKeys[keyNumber] = inputOptions[a].keyCode[b];
+                    allKeys[keyNumber] = this.inputOptions[a].keyCode[b];
                     keyNumber++;
                 }
 

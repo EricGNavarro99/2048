@@ -9,27 +9,27 @@ namespace Unity.Tile.Grid
         public TileRow[] rows { get; private set; }
         public TileCell[] cells { get; private set; }
 
-        public int size => cells.Length;
-        public int height => rows.Length;
-        public int width => size / height;
+        public int size => this.cells.Length;
+        public int height => this.rows.Length;
+        public int width => this.size / this.height;
 
         private void Awake()
         {
-            rows = GetComponentsInChildren<TileRow>();
-            cells = GetComponentsInChildren<TileCell>();
+            this.rows = GetComponentsInChildren<TileRow>();
+            this.cells = GetComponentsInChildren<TileCell>();
         }
 
         private void Start()
         {
-            for (int y = 0; y < rows.Length; y++)
-                for (int x = 0; x < rows[y].cells.Length; x++)
-                    rows[y].cells[x].coordinates = new Vector2Int(x, y);
+            for (int y = 0; y < this.rows.Length; y++)
+                for (int x = 0; x < this.rows[y].cells.Length; x++)
+                    this.rows[y].cells[x].coordinates = new Vector2Int(x, y);
         }
 
         public TileCell GetCell(int x, int y)
         {
-            if (x >= 0 && x < width && y >= 0 && y < height) 
-                return rows[y].cells[x];
+            if (x >= 0 && x < this.width && y >= 0 && y < this.height) 
+                return this.rows[y].cells[x];
             else 
                 return null;
         }
@@ -47,19 +47,19 @@ namespace Unity.Tile.Grid
 
         public TileCell GetRandomEmptyCell()
         {
-            int index = Random.Range(0, cells.Length);
+            int index = Random.Range(0, this.cells.Length);
             int startingIndex = index;
 
-            while (cells[index].occupied)
+            while (this.cells[index].occupied)
             {
                 index++;
 
-                if (index >= cells.Length) index = 0;
+                if (index >= this.cells.Length) index = 0;
 
                 if (index == startingIndex) return null;
             }
 
-            return cells[index];
+            return this.cells[index];
         }
     }
 }

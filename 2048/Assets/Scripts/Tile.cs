@@ -21,8 +21,8 @@ namespace Unity.Tile
 
         private void Awake()
         {
-            background = GetComponent<Image>();
-            text = GetComponentInChildren<TextMeshProUGUI>();
+            this.background = GetComponent<Image>();
+            this.text = GetComponentInChildren<TextMeshProUGUI>();
         }
 
         public void SetState(TileState state, int number)
@@ -30,9 +30,9 @@ namespace Unity.Tile
             this.state = state;
             this.number = number;
 
-            background.color = state.backgroundColor;
-            text.color = state.textColor;
-            text.text = number.ToString();
+            this.background.color = state.backgroundColor;
+            this.text.color = state.textColor;
+            this.text.text = number.ToString();
         }
 
         public void Spawn (TileCell cell)

@@ -7,7 +7,7 @@ namespace Unity.Tile.Cell
         public Vector2Int coordinates { get; set; }
         public Tile tile { get; set; }
 
-        private bool empty => tile == null;
-        public bool occupied => tile != null;
+        private bool empty => this.tile == null;
+        public bool occupied => this.tile != null;
     }
 }

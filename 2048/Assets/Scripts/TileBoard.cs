@@ -5,13 +5,15 @@ using UnityEngine;
 using Unity.Tile.State;
 using Unity.Tile.Grid;
 using Unity.Tile.Cell;
+using Unity.Manager;
 
 namespace Unity.Tile.Board
 {    
     public class TileBoard : MonoBehaviour
     {
+        public GameManager gameManager;
+        [Space]
         public Tile tilePrefab;
-        [Range(2, 14)] public byte tilesInBoard = 2;
         public TileState[] tileStates;
 
         private TileGrid grid;
@@ -21,32 +23,38 @@ namespace Unity.Tile.Board
 
         private void Awake()
         {
-            grid = GetComponentInChildren<TileGrid>();
-            tiles = new List<Tile>(16);            
+            this.grid = GetComponentInChildren<TileGrid>();
+            this.tiles = new List<Tile>(16);            
         }
 
-        private void Start()
+        public void CreateTile()
         {
-            for (byte a = 0; a < tilesInBoard; a++) CreateTile();
+            Tile tile = Instantiate(this.tilePrefab, this.grid.transform);            
+            tile.SetState(this.tileStates[0], 2);
+            tile.Spawn(this.grid.GetRandomEmptyCell());
+            this.tiles.Add(tile);
         }
 
-        private void CreateTile()
+        public void ClearBoard() 
         {
-            Tile tile = Instantiate(tilePrefab, grid.transform);            
-            tile.SetState(tileStates[0], 2);
-            tile.Spawn(grid.GetRandomEmptyCell());
-            tiles.Add(tile);
+            foreach (var cell in this.grid.cells)
+                cell.tile = null;
+
+            foreach (var tile in this.tiles)
+                Destroy(tile.gameObject);
+
+            this.tiles.Clear();
         }
 
         private void Move(Vector2Int direction, int startX, int incrementX, int startY, int incrementY)
         {
             bool changed = false;
 
-            for (int x = startX; x >= 0 && x < grid.width; x += incrementX)
+            for (int x = startX; x >= 0 && x < this.grid.width; x += incrementX)
             {
-                for (int y = startY; y >= 0 && y < grid.height; y += incrementY)
+                for (int y = startY; y >= 0 && y < this.grid.height; y += incrementY)
                 {
-                    TileCell cell = grid.GetCell(x, y);
+                    TileCell cell = this.grid.GetCell(x, y);
 
                     if (cell.occupied) changed |= MoveTile(cell.tile, direction);
                 }
@@ -58,7 +66,7 @@ namespace Unity.Tile.Board
         private bool MoveTile(Tile tile, Vector2Int direction)
         {
             TileCell newCell = null;
-            TileCell adjacent = grid.GetAdjacentCell(tile.cell, direction);
+            TileCell adjacent = this.grid.GetAdjacentCell(tile.cell, direction);
 
             while (adjacent != null) 
             {
@@ -74,7 +82,7 @@ namespace Unity.Tile.Board
                 }
 
                 newCell = adjacent;
-                adjacent = grid.GetAdjacentCell(adjacent, direction);
+                adjacent = this.grid.GetAdjacentCell(adjacent, direction);
             }
 
             if (newCell != null)
@@ -90,63 +98,87 @@ namespace Unity.Tile.Board
 
         private void Merge(Tile tileA, Tile tileB)
         {
-            tiles.Remove(tileA);
+            this.tiles.Remove(tileA);
 
             tileA.Merge(tileB.cell);
 
-            int index = Mathf.Clamp(IndexOf(tileB.state) + 1, 0, tileStates.Length - 1);
+            int index = Mathf.Clamp(IndexOf(tileB.state) + 1, 0, this.tileStates.Length - 1);
             int number = tileB.number * 2;
 
-            tileB.SetState(tileStates[index], number);
+            tileB.SetState(this.tileStates[index], number);
+
+            this.gameManager.IncreaseScore(number);
         }
 
         private int IndexOf(TileState state)
         {
-            for (int a = 0; a < tileStates.Length; a++)
-                if (state == tileStates[a]) return a;
+            for (int a = 0; a < this.tileStates.Length; a++)
+                if (state == this.tileStates[a]) return a;
 
             return -1;
         }
 
         private async void WaitingForChanges()
         {
-            waiting = true;
+            this.waiting = true;
 
             await Task.Delay(TimeSpan.FromSeconds(0.1));
 
-            waiting = false;
+            this.waiting = false;
 
-            foreach (var tile in tiles) tile.locked = false;
+            foreach (var tile in this.tiles) tile.locked = false;
 
-            if (tiles.Count != grid.size) CreateTile();
+            if (this.tiles.Count != this.grid.size) CreateTile();
+
+            if (CheckForGameOver()) this.gameManager.GameOver();
+        }
+
+        private bool CheckForGameOver()
+        {
+            if (this.tiles.Count != this.grid.size) return false;
+
+            foreach (var tile in this.tiles)
+            {
+                TileCell up = this.grid.GetAdjacentCell(tile.cell, Vector2Int.up);
+                TileCell down = this.grid.GetAdjacentCell(tile.cell, Vector2Int.down);
+                TileCell left = this.grid.GetAdjacentCell(tile.cell, Vector2Int.left);
+                TileCell right = this.grid.GetAdjacentCell(tile.cell, Vector2Int.right);
+
+                if (up != null && CanMerge(tile, up.tile)) return false;
+                if (down != null && CanMerge(tile, down.tile)) return false;
+                if (left != null && CanMerge(tile, left.tile)) return false;
+                if (right != null && CanMerge(tile, right.tile)) return false;
+            }
+
+            return true;
         }
 
         public void MoveUp()
         {
-            if (waiting) return;
+            if (this.waiting) return;
 
             Move(Vector2Int.up, 0, 1, 1, 1);
         }
 
         public void MoveDown()
         {
-            if (waiting) return;
+            if (this.waiting) return;
 
-            Move(Vector2Int.down, 0, 1, grid.height - 2, -1);
+            Move(Vector2Int.down, 0, 1, this.grid.height - 2, -1);
         }
 
         public void MoveLeft()
         {
-            if (waiting) return;
+            if (this.waiting) return;
 
             Move(Vector2Int.left, 1, 1, 0, 1);
         }
 
         public void MoveRight()
         {
-            if (waiting) return;
+            if (this.waiting) return;
 
-            Move(Vector2Int.right, grid.width - 2, -1, 0, 1);
+            Move(Vector2Int.right, this.grid.width - 2, -1, 0, 1);
         }
     }
 }

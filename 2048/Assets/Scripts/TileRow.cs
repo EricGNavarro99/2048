@@ -7,6 +7,6 @@ namespace Unity.Tile.Row
     {
         public TileCell[] cells { get; private set;}
 
-        private void Awake() => cells = GetComponentsInChildren<TileCell>();
+        private void Awake() => this.cells = GetComponentsInChildren<TileCell>();
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
-public class inputOptions
+public class InputOptions
 {
     [Space] public string name = null;
     [Space] public KeyCode[] keyCode = new KeyCode[0];
@@ -13,7 +13,7 @@ namespace Unity.InputSystem
 {
     public class InputSystem : MonoBehaviour
     {
-        public inputOptions[] inputOptions;
+        public InputOptions[] inputOptions;
 
         private void Awake()
         {
@@ -87,7 +87,7 @@ namespace Unity.InputSystem
             return isRepeatedKeys;
         }
 
-        private bool IncompletedFields(inputOptions[] inputOptions)
+        private bool IncompletedFields(InputOptions[] inputOptions)
         {
             bool areIncompletedFields = false;
 

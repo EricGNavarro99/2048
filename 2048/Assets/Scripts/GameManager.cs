@@ -24,7 +24,7 @@ namespace Unity.Manager
         public void NewGame()
         {
             SetScore(0);
-            this.highScore = LoadHighScore(); //!
+            this.highScore = LoadHighScore();
             this.highScoreText.text = LoadHighScore().ToString();
 
             this.gameOverCanvasGroup.alpha = 0f;
@@ -46,6 +46,8 @@ namespace Unity.Manager
 
             Fade(this.gameOverCanvasGroup, 1f, 1f);
         }
+
+        public void ExitGame() => Application.Quit();
 
         private void SetScore(int score)
         {

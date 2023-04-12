@@ -17,6 +17,8 @@ namespace Unity.InputSystem
 
         private void Awake()
         {
+            #if UNITY_EDITOR
+
             if (IncompletedFields(this.inputOptions))
             {
                 UnityEditor.EditorApplication.isPlaying = false;
@@ -28,6 +30,8 @@ namespace Unity.InputSystem
                 UnityEditor.EditorApplication.isPlaying = false;
                 throw new System.Exception("Keys are repeated");
             }
+
+            #endif
         }
 
         private void Update()
